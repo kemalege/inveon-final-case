@@ -1,0 +1,6 @@
+@InveonFinalCase.API_HostAddress = http://localhost:5064
+
+GET {{InveonFinalCase.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

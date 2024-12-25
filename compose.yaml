@@ -1,0 +1,6 @@
+﻿services:
+  ınveonfinalcase.apınveonfinalcase.ap:
+    image: ınveonfinalcase.apınveonfinalcase.ap
+    build:
+      context: .
+      dockerfile: InveonFinalCase.API/Dockerfile
