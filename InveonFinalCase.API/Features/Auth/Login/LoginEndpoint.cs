@@ -7,7 +7,7 @@ public static class LoginEndpoint
 {
     public static RouteGroupBuilder LoginGroupItemEndpoint(this RouteGroupBuilder group)
     {
-        group.MapPost("/",
+        group.MapPost("/login",
                 async (LoginCommand command, IMediator mediator) =>
                     (await mediator.Send(command)).ToGenericResult())
             .WithName("Login")
