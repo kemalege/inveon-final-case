@@ -1,4 +1,5 @@
 ﻿using InveonFinalCase.API.Features.Courses.Create;
+using InveonFinalCase.API.Features.Courses.Delete;
 using InveonFinalCase.API.Features.Courses.GetAllByUserId;
 using InveonFinalCase.API.Features.Courses.GetById;
 using InveonFinalCase.API.Features.Courses.Update;
@@ -13,6 +14,7 @@ public static class CourseEndpointExt
             .CreateCourseGroupItemEndpoint()
             .GetByIdCourseGroupItemEndpoint()
             .GetByUserIdCourseGroupItemEndpoint()
-            .UpdateCourseGroupItemEndpoint();
+            .UpdateCourseGroupItemEndpoint()
+            .DeleteCourseGroupItemEndpoint();
     }
 }
