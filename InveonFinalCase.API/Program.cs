@@ -1,6 +1,7 @@
 using InveonFinalCase.API;
 using InveonFinalCase.API.Domain.Entities;
 using InveonFinalCase.API.Features.Auth;
+using InveonFinalCase.API.Features.Courses;
 using InveonFinalCase.API.Repositories;
 using InveonFinalCase.API.Shared;
 using InveonFinalCase.API.Shared.Configurations;
@@ -86,7 +87,8 @@ builder.Services.Configure<List<Client>>(builder.Configuration.GetSection("Clien
 
 var app = builder.Build();
 
-app.AddCategoryGroupEndpointExt();
+app.AddAuthenticationGroupEndpoints();
+app.AddCourseGroupEndpointExt();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

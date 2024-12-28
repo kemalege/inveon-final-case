@@ -5,7 +5,7 @@ namespace InveonFinalCase.API.Features.Auth;
 
 public static class AuthEndpointExt
 {
-    public static void AddCategoryGroupEndpointExt(this WebApplication app)
+    public static void AddAuthenticationGroupEndpoints(this WebApplication app)
     {
         app.MapGroup("api/v1/auth").WithTags("Authorization")
             .LoginGroupItemEndpoint()

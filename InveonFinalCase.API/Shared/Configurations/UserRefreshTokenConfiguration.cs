@@ -1,5 +1,4 @@
 ﻿using InveonFinalCase.API.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InveonFinalCase.API.Shared.Configurations;
