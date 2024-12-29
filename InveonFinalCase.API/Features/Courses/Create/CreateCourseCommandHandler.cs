@@ -1,6 +1,9 @@
-﻿namespace InveonFinalCase.API.Features.Courses.Create;
+﻿using System.Security.Claims;
+using InveonFinalCase.API.Shared.Helpers;
 
-public class CreateCourseCommandHandler(AppDbContext context, IMapper mapper)
+namespace InveonFinalCase.API.Features.Courses.Create;
+
+public class CreateCourseCommandHandler(AppDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     : IRequestHandler<CreateCourseCommand, ServiceResult<Guid>>
 {
     public async Task<ServiceResult<Guid>> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
@@ -23,17 +26,14 @@ public class CreateCourseCommandHandler(AppDbContext context, IMapper mapper)
                 $"The Course with name({request.Name}) already exists", HttpStatusCode.BadRequest);
         }
         
-        // var instructor = _httpContextAccessor.HttpContext?.User.Claims
-        //     .FirstOrDefault(c => c.Type == "name")?.Value;
-        
-        // var userId = _httpContextAccessor.HttpContext?.User.Claims
-        //     .FirstOrDefault(c => c.Type == "sub")?.Value;
+        var userId = TokenHelper.GetUserId(httpContextAccessor.HttpContext);
+        var instructor = TokenHelper.GetInstructorName(httpContextAccessor.HttpContext);
 
         var newCourse = mapper.Map<Course>(request);
         newCourse.Created = DateTime.Now;
         newCourse.Id = Guid.NewGuid();
-        newCourse.Instructor = "Inveon";
-        newCourse.UserId = Guid.TryParse("25989edf-3f2e-4f79-9598-e58c704ffd71", out var userId) ? userId : Guid.Empty;
+        newCourse.Instructor = instructor;
+        newCourse.UserId = userId;
         // newCourse.Instructor = instructor;
 
         context.Courses.Add(newCourse);
