@@ -1,4 +1,6 @@
 ﻿using InveonFinalCase.API.Features.Courses.Dtos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InveonFinalCase.API.Features.Courses.GetById;
 
@@ -35,7 +37,7 @@ public static class GetCourseByIdEndpoint
     {
         group.MapGet("/{id:guid}",
                 async (IMediator mediator, Guid id) =>
-                    (await mediator.Send(new GetCourseByIdQuery(id))).ToGenericResult())
+                    (await mediator.Send(new GetCourseByIdQuery(id))).ToGenericResult()).RequireAuthorization()
             .WithName("GetByIdCourses");
 
         return group;
