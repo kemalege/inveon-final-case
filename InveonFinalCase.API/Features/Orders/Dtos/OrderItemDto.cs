@@ -2,4 +2,6 @@
 
 public record OrderItemDto(
     Guid CourseId,
+    string CourseName,
+    string CourseDescription,
     decimal Price);

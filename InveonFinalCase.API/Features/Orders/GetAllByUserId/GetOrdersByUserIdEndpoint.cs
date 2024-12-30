@@ -2,31 +2,33 @@
 
 namespace InveonFinalCase.API.Features.Orders.GetAllByUserId;
 
-public record GetOrdersByUserIdQuery(Guid UserId) : IRequestByServiceResult<List<OrderDto>>;
+public record GetOrdersByUserIdQuery(Guid UserId) : IRequestByServiceResult<List<OrderSummaryDto>>;
 
 public class GetOrdersByUserIdQueryHandler(AppDbContext context, IMapper mapper)
-    : IRequestHandler<GetOrdersByUserIdQuery, ServiceResult<List<OrderDto>>>
+    : IRequestHandler<GetOrdersByUserIdQuery, ServiceResult<List<OrderSummaryDto>>>
 {
-    public async Task<ServiceResult<List<OrderDto>>> Handle(GetOrdersByUserIdQuery request, CancellationToken cancellationToken)
+    public async Task<ServiceResult<List<OrderSummaryDto>>> Handle(GetOrdersByUserIdQuery request, CancellationToken cancellationToken)
     {
-        // Get orders for the given user
         var orders = await context.Orders
             .Where(x => x.UserId == request.UserId)
-            .Include(o => o.OrderItems) // Include order items
-            .ToListAsync(cancellationToken: cancellationToken);
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Course)  // <-- Eager-load the Course
+            .Include(o => o.Payment)
+            .ToListAsync(cancellationToken);
 
-        if (orders == null || !orders.Any())
+
+        if (orders.Count == 0)
         {
-            return ServiceResult<List<OrderDto>>.Error(
+            return ServiceResult<List<OrderSummaryDto>>.Error(
                 "No orders found",
                 $"No orders found for the user with id ({request.UserId}).",
                 HttpStatusCode.NotFound);
         }
 
         // Map to DTOs
-        var ordersAsDto = mapper.Map<List<OrderDto>>(orders);
+        var ordersAsDto = mapper.Map<List<OrderSummaryDto>>(orders);
 
-        return ServiceResult<List<OrderDto>>.SuccessAsOk(ordersAsDto);
+        return ServiceResult<List<OrderSummaryDto>>.SuccessAsOk(ordersAsDto);
     }
 }
 

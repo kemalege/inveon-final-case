@@ -6,9 +6,6 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
     public CreateOrderCommandValidator()
     {
-        RuleFor(x => x.UserId)
-            .NotEmpty().WithMessage("{PropertyName} is required.");
-
         RuleForEach(x => x.OrderItems)
             .SetValidator(new CreateOrderItemDtoValidator());
     }

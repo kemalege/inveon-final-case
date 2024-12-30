@@ -1,5 +1,6 @@
 ﻿using InveonFinalCase.API.Features.Orders.Create;
 using InveonFinalCase.API.Features.Orders.GetAllByUserId;
+using InveonFinalCase.API.Features.Orders.GetById;
 
 namespace InveonFinalCase.API.Features.Orders;
 
@@ -9,6 +10,7 @@ public static class OrderEndpointExt
     {
         app.MapGroup("api/v1/orders").WithTags("Orders")
             .CreateOrderGroupItemEndpoint().RequireAuthorization()
-            .GetByUserIdOrdersGroupItemEndpoint().RequireAuthorization();
+            .GetByUserIdOrdersGroupItemEndpoint().RequireAuthorization()
+            .GetByIdOrderGroupItemEndpoint().RequireAuthorization();
     }
 }

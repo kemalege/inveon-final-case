@@ -1,8 +1,9 @@
-﻿using InveonFinalCase.API.Shared.Helpers;
+﻿using InveonFinalCase.API.Features.Payments;
+using InveonFinalCase.API.Shared.Helpers;
 
 namespace InveonFinalCase.API.Features.Orders.Create;
 
-public class CreateOrderCommandHandler(AppDbContext context, IHttpContextAccessor httpContextAccessor)
+public class CreateOrderCommandHandler(AppDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
     : IRequestHandler<CreateOrderCommand, ServiceResult<Guid>>
 {
     public async Task<ServiceResult<Guid>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -18,15 +19,14 @@ public class CreateOrderCommandHandler(AppDbContext context, IHttpContextAccesso
                     $"The Course with id({item.CourseId}) was not found.", HttpStatusCode.NotFound);
             }
         }
+        
+        var newOrder = mapper.Map<Order>(request);
 
-        var newOrder = new Order
-        {
-            Id = Guid.NewGuid(),
-            UserId = userId,
-            OrderDate = DateTime.Now,
-            TotalAmount = request.OrderItems.Sum(x => x.Price),
-            Status = OrderStatus.Pending
-        };
+        newOrder.Id = Guid.NewGuid();
+        newOrder.UserId = userId;
+        newOrder.TotalAmount = request.OrderItems.Sum(x => x.Price);
+        newOrder.OrderDate = DateTime.Now;
+        newOrder.Status = OrderStatus.Pending;
 
         newOrder.OrderItems = request.OrderItems.Select(item => new OrderItem
         {
@@ -37,8 +37,23 @@ public class CreateOrderCommandHandler(AppDbContext context, IHttpContextAccesso
         }).ToList();
 
         context.Orders.Add(newOrder);
+
+        var newPayment = new Payment()
+        {
+            Id = Guid.NewGuid(),
+            OrderId = newOrder.Id,
+            PaymentDate = DateTime.Now,
+            Amount = newOrder.TotalAmount,
+            Status = PaymentStatus.Pending,
+            CardType = request.Payment.CardType,
+            Last4Digits = request.Payment.Last4Digits
+        };
+
+        context.Payments.Add(newPayment);
+
         await context.SaveChangesAsync(cancellationToken);
 
         return ServiceResult<Guid>.SuccessAsCreated(newOrder.Id, $"/api/orders/{newOrder.Id}");
     }
 }
+
