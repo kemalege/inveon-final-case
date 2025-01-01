@@ -1,4 +1,5 @@
 ﻿using InveonFinalCase.API.Features.Auth.Login;
+using InveonFinalCase.API.Features.Auth.RefreshToken;
 using InveonFinalCase.API.Features.Auth.Register;
 
 namespace InveonFinalCase.API.Features.Auth;
@@ -9,6 +10,7 @@ public static class AuthEndpointExt
     {
         app.MapGroup("api/v1/auth").WithTags("Authorization")
             .LoginGroupItemEndpoint()
-            .RegisterGroupItemEndpoint();
+            .RegisterGroupItemEndpoint()
+            .RefreshTokenGroupItemEndpoint();
     }
 }
