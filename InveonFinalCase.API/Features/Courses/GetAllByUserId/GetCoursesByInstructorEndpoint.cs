@@ -31,7 +31,7 @@ public static class GetCourseByUserIdEndpoint
 {
     public static RouteGroupBuilder GetByUserIdCourseGroupItemEndpoint(this RouteGroupBuilder group)
     {
-        group.MapGet("/user/{userId:guid}",
+        group.MapGet("/instructor/{userId:guid}",
                 async (IMediator mediator, Guid userId) =>
                     (await mediator.Send(new GetCourseByUserIdQuery(userId))).ToGenericResult())
             .WithName("GetByUserIdCourses");
