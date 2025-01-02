@@ -1,41 +1,50 @@
 ﻿using InveonFinalCase.API.Features.Courses.Dtos;
+using InveonFinalCase.API.Shared.Services;
 
 namespace InveonFinalCase.API.Features.Courses.GetAll;
 
-public record GetAllCoursesQuery() : IRequestByServiceResult<List<CourseDto>>;
+public record GetCoursesWithPaginationQuery(CourseQueryObject QueryObject) : IRequestByServiceResult<PaginatedResult<CourseDto>>;
 
-
-public class GetAllCoursesQueryHandler(AppDbContext context, IMapper mapper)
-    : IRequestHandler<GetAllCoursesQuery, ServiceResult<List<CourseDto>>>
+public class GetCoursesWithPaginationQueryHandler(AppDbContext context, IQueryService<Course> queryService, IMapper mapper)
+    : IRequestHandler<GetCoursesWithPaginationQuery, ServiceResult<PaginatedResult<CourseDto>>>
 {
-    public async Task<ServiceResult<List<CourseDto>>> Handle(GetAllCoursesQuery request,
-        CancellationToken cancellationToken)
+    public async Task<ServiceResult<PaginatedResult<CourseDto>>> Handle(GetCoursesWithPaginationQuery request, CancellationToken cancellationToken)
     {
-        var courses = await context.Courses
-            .ToListAsync(cancellationToken: cancellationToken);
+        var query = context.Courses.Include(c => c.Category).AsQueryable();
+        
+        query = queryService.ApplyFilter(query, c => !request.QueryObject.CategoryId.HasValue || c.CategoryId == request.QueryObject.CategoryId);
 
-        var categories = await context.Categories.ToListAsync(cancellationToken: cancellationToken);
-
-
-        foreach (var course in courses)
+        if (!query.Any())
         {
-            course.Category = categories.First(x => x.Id == course.CategoryId);
+            return ServiceResult<PaginatedResult<CourseDto>>.Error(
+                "No courses found",
+                "No courses available with the given criteria",
+                HttpStatusCode.NotFound);
         }
+        
+        var paginatedResult = await queryService.ToPaginatedResultAsync(query, request.QueryObject, cancellationToken);
 
-        var coursesAsDto = mapper.Map<List<CourseDto>>(courses);
-        return ServiceResult<List<CourseDto>>.SuccessAsOk(coursesAsDto);
+        var coursesAsDto = mapper.Map<List<CourseDto>>(paginatedResult.Items);
+        return ServiceResult<PaginatedResult<CourseDto>>.SuccessAsOk(
+            new PaginatedResult<CourseDto>(
+                coursesAsDto,
+                paginatedResult.TotalCount,
+                paginatedResult.CurrentPage,
+                paginatedResult.PageSize
+            )
+        );
     }
 }
 
-
-public static class GetAllCoursesEndpoint
+public static class GetCoursesWithPaginationEndpoint
 {
-    public static RouteGroupBuilder GetAllCourseGroupItemEndpoint(this RouteGroupBuilder group)
+    public static RouteGroupBuilder GetCoursesWithPaginationGroupItemEndpoint(this RouteGroupBuilder group)
     {
         group.MapGet("/",
-                async (IMediator mediator) =>
-                    (await mediator.Send(new GetAllCoursesQuery())).ToGenericResult())
-            .WithName("GetAllCourses");
+                async (IMediator mediator, [AsParameters] CourseQueryObject queryObject) =>
+                (await mediator.Send(new GetCoursesWithPaginationQuery(queryObject))).ToGenericResult())
+            .WithName("GetCoursesWithPagination");
+
 
         return group;
     }
