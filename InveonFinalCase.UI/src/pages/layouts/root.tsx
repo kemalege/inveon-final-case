@@ -1,5 +1,11 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router"
 
-export default function Root() {
-  return <Outlet />;
+const Layout = () => {
+    return (
+        <main>
+            <Outlet />
+        </main>
+    )
 }
+
+export default Layout
