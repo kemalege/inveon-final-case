@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { jwtDecode } from "jwt-decode";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,11 @@ import { useLocation, useNavigate } from "react-router";
 import axios from "@/api/axios";
 
 const LOGIN_URL = "/auth/login";
+
+interface DecodedToken {
+  roles: string[];
+  given_name: string | null;
+}
 
 const formSchema = z.object({
   email: z.string().email({
@@ -47,18 +53,24 @@ export function LoginForm() {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ values }),
+        JSON.stringify({ email: values.email, password: values.password }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
       );
       console.log(JSON.stringify(response?.data));
-      //console.log(JSON.stringify(response));
-      const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
+      const data = response?.data;
+      const accessToken = data.token.accessToken;
+      const decodedToken = jwtDecode<DecodedToken>(accessToken);
+      const { given_name } = decodedToken;
+      let { roles } = decodedToken;
 
-      setAuth({ user: values.email, roles, accessToken });
+      if (typeof roles === 'string') {
+        roles = [roles];
+      }
+
+      setAuth({ user: given_name, roles, accessToken });
       navigate(from, { replace: true });
     } catch (err) {
       console.error(err);
