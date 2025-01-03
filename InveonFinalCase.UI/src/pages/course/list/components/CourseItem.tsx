@@ -1,4 +1,5 @@
 import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
+import { useNavigate } from "react-router";
 import { AddToCartHoverCard } from "./AddToCartHoverCard";
 
 export interface CourseItemProps {
@@ -14,20 +15,20 @@ export interface CourseItemProps {
     };
 }
 
-export function CourseItem({ name, instructor, description, price, imageUrl, category }: CourseItemProps) {
+export function CourseItem({ id, name, instructor, description, price, imageUrl, category }: CourseItemProps) {
+
+    const navigate = useNavigate();
+
     return (
         <HoverCard>
-            <div className="flex w-full pb-4 gap-4 border-b border-border last:border-none">
+            <div className="flex w-full pb-4 gap-4 border-b border-border last:border-none" onClick={() => navigate(`/course/${id}`)}>
                 <HoverCardTrigger asChild>
                     <div className="flex cursor-pointer gap-4 flex-1">
-                        {/* Image Section */}
                         <img
                             src={imageUrl ?? "/assets/default-course.jpg"}
                             alt={name}
                             className="w-48 h-36 object-cover"
                         />
-                        
-                        {/* Course Details */}
                         <div className="flex flex-col flex-1">
                             <h2 className="text-lg font-semibold text-foreground">{name}</h2>
                             <p className="text-muted-foreground text-sm">{instructor}</p>

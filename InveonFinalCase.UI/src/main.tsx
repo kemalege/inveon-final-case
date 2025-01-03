@@ -11,6 +11,7 @@ import RequireAuth from "./pages/auth/RequireAuth.tsx";
 import Home from "./pages/home/Home.tsx";
 import Unauthorized from "./pages/auth/Unauthorized.tsx";
 import Layout from "./pages/layouts/Layout.tsx";
+import CourseDetail from "./pages/course/details/CourseDetail.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,15 +19,6 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
         { path: "/", element: <Home /> },
-        {
-            path: "instructor",
-            element: (
-                <RequireAuth allowedRoles={['Instructor']}>
-                    <Home />
-                </RequireAuth>
-            ),
-        },
-        { path: "login", element: <LoginPage /> },
         {
           path: "/unauthorized",
           element: <Unauthorized />,
@@ -37,6 +29,19 @@ const router = createBrowserRouter([
           element: <LoginPage />,
           errorElement: <ErrorPage />,
         },
+        {
+          path: "/course/:courseId",
+          element: <CourseDetail />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "instructor",
+          element: (
+              <RequireAuth allowedRoles={['Instructor']}>
+                  <Home />
+              </RequireAuth>
+          ),
+      },
     ],
 }
 ]);
