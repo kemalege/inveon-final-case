@@ -1,8 +1,9 @@
 import React from 'react'
+import CourseList from '../course/list/CourseList'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <CourseList />
   )
 }
 

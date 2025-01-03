@@ -22,6 +22,7 @@ export const useLogin = () => {
         mutationFn: loginUser,
         onSuccess: (data) => {
             const accessToken = data.token.accessToken;
+            const refreshToken = data.token.refreshToken;
             const decodedToken = jwtDecode<DecodedToken>(accessToken);
             const { given_name } = decodedToken;
             let { roles } = decodedToken;
@@ -30,8 +31,9 @@ export const useLogin = () => {
                 roles = [roles];
             }
 
-            setAuth({ user: given_name, roles, accessToken });
+            setAuth({ user: given_name, roles, accessToken, refreshToken });
             localStorage.setItem("accessToken", accessToken); 
+            localStorage.setItem("refreshToken", refreshToken); 
             navigate(from, { replace: true });
         },
         onError: (error) => {

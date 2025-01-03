@@ -12,9 +12,11 @@ const RequireAuth = ({ allowedRoles, children }: RequireAuthProps) => {
 
   const userHasRequiredRole = allowedRoles ? auth?.roles?.some((role) => allowedRoles.includes(role)) : true;
 
-    if (allowedRoles?.length === 0) {
-        return <>{children}</>;;
-    }
+  if (allowedRoles?.length === 0) {
+      return <>{children}</>;;
+  }
+
+  console.log(auth?.roles);
 
   if (userHasRequiredRole) {
     return <>{children}</>;

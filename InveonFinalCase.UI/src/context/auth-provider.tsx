@@ -5,6 +5,7 @@ export interface AuthContextType {
         user: string | null;
         roles?: string[];
         accessToken?: string
+        refreshToken?: string
     };
     setAuth: React.Dispatch<React.SetStateAction<AuthContextType["auth"]>>;
     logout: () => void;
@@ -20,6 +21,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const logout = () => {
         setAuth({ user: null, roles: [], accessToken: undefined });
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         window.location.href = "/login";
     };
 
