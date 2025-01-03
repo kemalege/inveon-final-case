@@ -11,32 +11,44 @@ import RequireAuth from "./pages/auth/RequireAuth.tsx";
 import Home from "./pages/home/Home.tsx";
 import CreateCourse from "./pages/auth/instructor/CreateCourse.tsx";
 import Unauthorized from "./pages/auth/Unauthorized.tsx";
+import Layout from "./pages/layouts/Layout.tsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/unauthorized",
-    element: <Unauthorized />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/login",
-    element: <LoginPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/instructor",
-    element: (
-      <RequireAuth allowedRoles={["Instructor"]}>
-        <CreateCourse />
-      </RequireAuth>
-    ),
-    errorElement: <ErrorPage />,
-  },
+    path: "/", 
+    element: <Layout />,
+    children: [
+        { path: "/", element: <Home /> },
+        {
+            path: "instructor",
+            element: (
+                <RequireAuth allowedRoles={['Instructor']}>
+                    <Home />
+                </RequireAuth>
+            ),
+        },
+        { path: "login", element: <LoginPage /> },
+        {
+          path: "/unauthorized",
+          element: <Unauthorized />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/login",
+          element: <LoginPage />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/instructor",
+          element: (
+            <RequireAuth allowedRoles={["Instructor"]}>
+              <CreateCourse />
+            </RequireAuth>
+          ),
+          errorElement: <ErrorPage />,
+        },
+    ],
+}
 ]);
 
 const queryClient = new QueryClient();

@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { jwtDecode } from "jwt-decode";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,16 +11,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useAuth from "@/hooks/useAuth";
-import { useLocation, useNavigate } from "react-router";
-import axios from "@/api/axios";
-
-const LOGIN_URL = "/auth/login";
-
-interface DecodedToken {
-  roles: string[];
-  given_name: string | null;
-}
+import { Loader2 } from "lucide-react"
+import { useLogin } from "./hooks/useLogin";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -34,11 +24,6 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
-  const { setAuth } = useAuth();
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,34 +32,10 @@ export function LoginForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const { mutate, isPending} = useLogin();
 
-    try {
-      const response = await axios.post(
-        LOGIN_URL,
-        JSON.stringify({ email: values.email, password: values.password }),
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      console.log(JSON.stringify(response?.data));
-      const data = response?.data;
-      const accessToken = data.token.accessToken;
-      const decodedToken = jwtDecode<DecodedToken>(accessToken);
-      const { given_name } = decodedToken;
-      let { roles } = decodedToken;
-
-      if (typeof roles === 'string') {
-        roles = [roles];
-      }
-
-      setAuth({ user: given_name, roles, accessToken });
-      navigate(from, { replace: true });
-    } catch (err) {
-      console.error(err);
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+      mutate(values);
   }
 
   return (
@@ -106,7 +67,10 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Login</Button>
+        <Button variant='default' className="w-full" type="submit">
+          {isPending ? <Loader2 className="animate-spin" />
+          : "Login"}
+        </Button>
       </form>
     </Form>
   );
