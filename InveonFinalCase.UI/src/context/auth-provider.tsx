@@ -1,13 +1,16 @@
 import React, { createContext, useState } from "react";
 
+type AuthState = {
+    user: string | null;
+    roles?: string[];
+    accessToken?: string;
+    refreshToken?: string;
+}
+
 export interface AuthContextType {
-    auth: {
-        user: string | null;
-        roles?: string[];
-        accessToken?: string
-        refreshToken?: string
-    };
+    auth: AuthState;
     setAuth: React.Dispatch<React.SetStateAction<AuthContextType["auth"]>>;
+    setUserAuth: (auth: AuthState) => void;
     logout: () => void;
 }
 
@@ -18,6 +21,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const [auth, setAuth] = useState<AuthContextType["auth"]>({ user: null });
 
+    const setUserAuth = (auth:AuthState) => {
+        setAuth(auth);
+        localStorage.setItem("accessToken", auth.accessToken as string);
+        localStorage.setItem("refreshToken", auth.refreshToken as string);
+    }
+
     const logout = () => {
         setAuth({ user: null, roles: [], accessToken: undefined });
         localStorage.removeItem("accessToken");
@@ -26,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ auth, setAuth, logout }}>
+        <AuthContext.Provider value={{ auth, setAuth, setUserAuth, logout }}>
             {children}
         </AuthContext.Provider>
     );

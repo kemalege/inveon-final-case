@@ -1,8 +1,10 @@
 import axios from '@/api/axios';
 import useAuth from './useAuth';
+import { jwtDecode } from 'jwt-decode';
+import { DecodedToken } from '@/pages/auth/login/hooks/useLogin';
 
 const useRefreshToken = () => {
-    const { setAuth } = useAuth();
+    const { setUserAuth } = useAuth();
 
     const refresh = async (refreshToken: string) => {
         const response = await axios.post('/auth/refresh-token', {
@@ -11,11 +13,14 @@ const useRefreshToken = () => {
             withCredentials: true
         });
         const { accessToken, refreshToken: newRefreshToken } = response.data.token;
-        setAuth(prev => {
-            // console.log(JSON.stringify(prev));
-            // console.log(accessToken);
-            return { ...prev, accessToken, refreshToken: newRefreshToken };
-        });
+        const decodedToken = jwtDecode<DecodedToken>(accessToken);
+        const { given_name } = decodedToken;
+        let { roles } = decodedToken;
+
+        if (typeof roles === "string") {
+            roles = [roles];
+        }
+        setUserAuth({ user: given_name, roles, accessToken, refreshToken: newRefreshToken });
         return accessToken;
     }
     return refresh;

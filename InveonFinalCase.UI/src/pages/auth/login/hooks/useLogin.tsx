@@ -5,14 +5,14 @@ import { jwtDecode } from "jwt-decode";
 import { useLocation, useNavigate } from "react-router";
 import axios from "@/api/axios";
 
-interface DecodedToken {
+export interface DecodedToken {
     given_name: string;
     roles: string | string[];
     accessToken: string;
 }
 
 export const useLogin = () => {
-    const { setAuth } = useAuth();
+    const { setUserAuth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -30,10 +30,7 @@ export const useLogin = () => {
             if (typeof roles === "string") {
                 roles = [roles];
             }
-
-            setAuth({ user: given_name, roles, accessToken, refreshToken });
-            localStorage.setItem("accessToken", accessToken); 
-            localStorage.setItem("refreshToken", refreshToken); 
+            setUserAuth({ user: given_name, roles, accessToken, refreshToken });
             navigate(from, { replace: true });
         },
         onError: (error) => {
