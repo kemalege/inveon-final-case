@@ -7,22 +7,23 @@ interface RequireAuthProps {
 }
 
 const RequireAuth = ({ allowedRoles, children }: RequireAuthProps) => {
-  const { auth } = useAuth();
+  const { isAuthenticated, getDecodedToken } = useAuth();
   const location = useLocation();
+  
+  const decodedToken = getDecodedToken();
+  const roles = decodedToken ? decodedToken.roles : [];
 
-  const userHasRequiredRole = allowedRoles ? auth?.roles?.some((role) => allowedRoles.includes(role)) : true;
+  const userHasRequiredRole = allowedRoles ? (roles as string[]).some((role) => allowedRoles.includes(role)) : true;
 
-  if (allowedRoles?.length === 0) {
+  if (allowedRoles?.length === 0 && isAuthenticated()) {
       return <>{children}</>;;
   }
-
-  console.log(auth?.roles);
 
   if (userHasRequiredRole) {
     return <>{children}</>;
   }
 
-  if (auth?.user) {
+  if (isAuthenticated()) {
     return <Navigate to="/unauthorized" state={{ from: location }} replace />;
   }
 

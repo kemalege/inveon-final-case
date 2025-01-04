@@ -7,14 +7,14 @@ import { CartHeaderButton } from "./CartHeaderButton";
 import { Search } from "lucide-react";
 
 export function Header() {
-    const { auth, logout } = useAuth();
+    const { isAuthenticated, getDecodedToken, logout } = useAuth();
 
-    const isAuth = auth?.user;
+    const isAuth = isAuthenticated();
+    const token = getDecodedToken();
 
     return (
         <header className="sticky top-0 z-40 bg-background border-b border-border">
             <div className="container mx-auto px-4 flex items-center justify-between py-2">
-                {/* Left Section */}
                 <div className="flex items-center space-x-4">
                     <Link to="/" className="text-primary text-xl font-bold">
                         <span className="text-purple-600">Invony</span>
@@ -25,7 +25,6 @@ export function Header() {
                     </div>
                 </div>
 
-                {/* Right Section */}
                 <div className="flex items-center space-x-4">
                   {!isAuth && <Button variant="ghost">Register</Button>}
                   
@@ -36,7 +35,7 @@ export function Header() {
                       </Button>
                       <CartHeaderButton cartItemCount={2} />
                       <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-foreground">
-                        {auth?.user?.split("")[0].toUpperCase()}
+                        {token?.given_name?.split("")[0].toUpperCase()}
                       </div>
                     </>
                   ) : (
