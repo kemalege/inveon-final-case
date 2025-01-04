@@ -22,16 +22,10 @@ export default function OrderItem({ order }: OrderItemProps) {
                   </p>
               </div>
           </div>
-
-          {/* Date */}
           <span className="w-1/5 text-left self-center">{new Date(order.orderDate).toLocaleDateString()}</span>
-
-          {/* Total Price */}
           <span className="w-1/5 font-semibold text-primary text-left self-center">
               ₺{order.totalAmount.toFixed(2)}
           </span>
-
-          {/* Payment Method */}
           <span className="w-1/5 text-muted-foreground text-left self-center">
               {order.payment.cardType} ****{order.payment.last4Digits}
           </span>

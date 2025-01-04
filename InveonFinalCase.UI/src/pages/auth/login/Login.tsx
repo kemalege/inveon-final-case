@@ -2,7 +2,7 @@ import { LoginForm } from "./LoginForm";
 
 export function LoginPage() {
   return (
-    <div className="flex h-screen items-center justify-center bg-background">
+    <div className="flex mt-32 items-center justify-center h-full bg-background">
       <div className="grid w-full max-w-4xl grid-cols-1 md:grid-cols-2 gap-6 bg-card shadow-lg rounded-lg border border-border">
         
         <div className="hidden md:flex items-center justify-center bg-primary/20 rounded-l-lg">
@@ -21,4 +21,5 @@ export function LoginPage() {
     </div>
   );
 }
+
 
