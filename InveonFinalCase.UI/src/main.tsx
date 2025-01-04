@@ -17,6 +17,8 @@ import Cart from "./pages/cart/Cart.tsx";
 import Checkout from "./pages/checkout/Checkout.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
 import CheckoutSuccess from "./pages/checkout/CheckoutSuccess.tsx";
+import PurchaseHistory from "./pages/order/PurchaseHistory.tsx";
+import NotFound from "./components/NotFound.tsx";
 
 const router = createBrowserRouter([
   {
@@ -62,11 +64,23 @@ const router = createBrowserRouter([
                   <Checkout />
               </RequireAuth>
           ),
-          
         },
         {
           path: "/order-success",
           element: <CheckoutSuccess />,
+        },
+        {
+          path: "/purchase-history",
+          element: (
+              <RequireAuth>
+                <PurchaseHistory />
+              </RequireAuth>
+          ),
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "*",
+          element: <NotFound />, 
         },
     ],
 }
