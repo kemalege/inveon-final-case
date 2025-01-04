@@ -2,10 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import CartItem from "./components/CartItem";
 import { useCart } from "./context/CartContext";
+import { useNavigate } from "react-router";
 
 export default function Cart() {
 
   const { cart, removeFromCart, clearCart, totalAmount } = useCart();
+
+  const navigate = useNavigate();
 
   return (
     <div className="max-w-6xl mx-auto p-8 grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -28,7 +31,7 @@ export default function Cart() {
         )}
       </div>
 
-      <div className="p-6 bg-card space-y-2">
+      {cart.length > 0 && <div className="p-6 bg-card space-y-2">
         <div className="space-y-1">
             <span className="text-sm text-muted-foreground font-medium">
                 Toplam:
@@ -37,12 +40,12 @@ export default function Cart() {
                 ₺{totalAmount.toFixed(2)}
             </div>
         </div>
-        <Button className="w-full rounded-none bg-purple-600 text-white">Checkout</Button>
+        <Button className="w-full rounded-none bg-purple-600 text-white" onClick={()=> navigate("/checkout")}>Checkout</Button>
         <Separator />
         <Button variant="outline" className="w-full rounded-none" onClick={clearCart}>
           Clear Cart
         </Button>
-      </div>
+      </div>}
     </div>
   );
 }

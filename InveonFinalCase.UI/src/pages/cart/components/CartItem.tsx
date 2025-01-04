@@ -13,7 +13,7 @@ export default function CartItem({ item, removeFromCart }: CartItemProps) {
       <img
         src={item.imageUrl ?? "/assets/default-course.jpg"}
         alt={item.name}
-        className="w-36 h-24 object-cover rounded"
+        className="w-36 h-24 object-cover"
       />
 
       <div className="flex-1 flex flex-col justify-center">

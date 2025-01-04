@@ -14,6 +14,9 @@ import Layout from "./pages/layouts/Layout.tsx";
 import CourseDetail from "./pages/course/details/CourseDetail.tsx";
 import { CartProvider } from "./pages/cart/context/CartContext.tsx";
 import Cart from "./pages/cart/Cart.tsx";
+import Checkout from "./pages/checkout/Checkout.tsx";
+import { Toaster } from "./components/ui/toaster.tsx";
+import CheckoutSuccess from "./pages/checkout/CheckoutSuccess.tsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +55,19 @@ const router = createBrowserRouter([
               </RequireAuth>
           ),
         },
+        {
+          path: "/checkout",
+          element: (
+              <RequireAuth>
+                  <Checkout />
+              </RequireAuth>
+          ),
+          
+        },
+        {
+          path: "/order-success",
+          element: <CheckoutSuccess />,
+        },
     ],
 }
 ]);
@@ -65,6 +81,7 @@ createRoot(document.getElementById("root")!).render(
         <AuthProvider>
           <CartProvider>
             <RouterProvider router={router} />
+            <Toaster />
           </CartProvider>
         </AuthProvider>
       </App>
