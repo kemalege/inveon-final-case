@@ -20,6 +20,9 @@ import CheckoutSuccess from "./pages/checkout/CheckoutSuccess.tsx";
 import PurchaseHistory from "./pages/order/PurchaseHistory.tsx";
 import NotFound from "./components/NotFound.tsx";
 import LearningContent from "./pages/user/LearningContent.tsx";
+import CreateCourse from "./pages/instructor/CreateCourse.tsx";
+import InstructorPanel from "./pages/instructor/InstructorPanel.tsx";
+import EditCourse from "./pages/instructor/EditCourse.tsx";
 
 const router = createBrowserRouter([
   {
@@ -43,10 +46,18 @@ const router = createBrowserRouter([
           errorElement: <ErrorPage />,
         },
         {
-          path: "instructor",
+          path: "/instructor/dashboard",
           element: (
               <RequireAuth allowedRoles={['Instructor']}>
-                  <Home />
+                  <InstructorPanel />
+              </RequireAuth>
+          ),
+        },
+        {
+          path: "/instructor/course/:courseId/edit",
+          element: (
+              <RequireAuth allowedRoles={['Instructor']}>
+                  <EditCourse />
               </RequireAuth>
           ),
         },
@@ -84,6 +95,15 @@ const router = createBrowserRouter([
           element: (
               <RequireAuth>
                 <LearningContent />
+              </RequireAuth>
+          ),
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/instructor/course/create",
+          element: (
+              <RequireAuth allowedRoles={['Instructor']}>
+                <CreateCourse />
               </RequireAuth>
           ),
           errorElement: <ErrorPage />,

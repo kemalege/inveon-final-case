@@ -10,7 +10,8 @@ import { ProfileDropDown } from "./ProfileDropdown";
 export function Header() {
   const { isAuthenticated, getDecodedToken, logout } = useAuth();
   const isAuth = isAuthenticated();
-  const token = getDecodedToken() || {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const token = getDecodedToken() as any;
 
   return (
       <header className="sticky top-0 z-40 bg-background border-b border-border">
@@ -27,7 +28,12 @@ export function Header() {
 
               <div className="flex items-center space-x-4">
                   {!isAuth && <Button variant="ghost">Register</Button>}
-
+                  {token.roles.includes("Instructor") && 
+                    <div className="text-sm text-primary">
+                      <Link to="/instructor/dashboard" className="block hover:text-purple-600">
+                          Instructor Dashboard
+                      </Link>
+                    </div>}
                   {isAuth ? (
                       <>
                           <div className="text-sm text-primary">
