@@ -1,9 +1,10 @@
-// components/Header.tsx
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import { Link } from "react-router";
 import { ModeToggle } from "./ModeToggle";
+import { CartHeaderButton } from "./CartHeaderButton";
+import { Search } from "lucide-react";
 
 export function Header() {
     const { auth, logout } = useAuth();
@@ -15,25 +16,12 @@ export function Header() {
             <div className="container mx-auto px-4 flex items-center justify-between py-2">
                 {/* Left Section */}
                 <div className="flex items-center space-x-4">
-                    <Link to="/" className="text-primary text-lg font-bold">
+                    <Link to="/" className="text-primary text-xl font-bold">
                         <span className="text-purple-600">Invony</span>
                     </Link>
                     <div className="relative flex-1">
                         <Input type="text" placeholder="Search for anything" className="pl-10" />
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="absolute left-3 top-2.5 w-5 h-5 text-muted-foreground"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 15l5.5 5.5M4 10a6 6 0 1112 0 6 6 0 01-12 0z"
-                            />
-                        </svg>
+                        <Search className="absolute left-3 top-2.5 w-5 h-5 text-muted-foreground"/>
                     </div>
                 </div>
 
@@ -46,6 +34,7 @@ export function Header() {
                       <Button variant="ghost" onClick={logout}>
                         Logout
                       </Button>
+                      <CartHeaderButton cartItemCount={2} />
                       <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-foreground">
                         {auth?.user?.split("")[0].toUpperCase()}
                       </div>

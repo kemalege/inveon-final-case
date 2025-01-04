@@ -1,11 +1,16 @@
 import { Loading } from "@/components/Loading";
 import { Button } from "@/components/ui/button";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useCart } from "@/pages/cart/context/CartContext";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const CourseDetail = () => {
     const axiosPrivate = useAxiosPrivate();
+
+    const { addToCart, isInCart } = useCart();
+    
+    const navigate = useNavigate();
 
     const fetchCourseById = async (id: string) => {
         const response = await axiosPrivate.get(`/courses/${id}`);
@@ -20,7 +25,23 @@ const CourseDetail = () => {
         enabled: !!courseId,
     });
 
-    console.log(data);
+    const addToCartButtonContext = isInCart(courseId as string) ? (
+        <Button
+          variant="outline"
+          className="w-full bg-purple-600 text-white"
+          onClick={() => navigate("/cart")}
+        >
+          Go To Cart
+        </Button>
+      ) : (
+        <Button
+          variant="outline"
+          className="w-full bg-purple-600 text-white"
+          onClick={() => courseId && addToCart(data)}
+        >
+          Add to Cart
+        </Button>
+      );
 
     if (isLoading) return <Loading />;
     if (error) return <p>Error loading course details.</p>;
@@ -56,7 +77,7 @@ const CourseDetail = () => {
                         <p className="text-lg font-semibold text-primary">
                         ₺{price.toFixed(2)}
                         </p>
-                        <Button className="w-full">Add to Cart</Button>
+                        {addToCartButtonContext}
                         <Button variant="outline" className="w-full">
                         Buy Now
                         </Button>

@@ -12,6 +12,8 @@ import Home from "./pages/home/Home.tsx";
 import Unauthorized from "./pages/auth/Unauthorized.tsx";
 import Layout from "./pages/layouts/Layout.tsx";
 import CourseDetail from "./pages/course/details/CourseDetail.tsx";
+import { CartProvider } from "./pages/cart/context/CartContext.tsx";
+import Cart from "./pages/cart/Cart.tsx";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +43,15 @@ const router = createBrowserRouter([
                   <Home />
               </RequireAuth>
           ),
-      },
+        },
+        {
+          path: "/cart",
+          element: (
+              <RequireAuth>
+                  <Cart />
+              </RequireAuth>
+          ),
+        },
     ],
 }
 ]);
@@ -53,7 +63,9 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <App>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <CartProvider>
+            <RouterProvider router={router} />
+          </CartProvider>
         </AuthProvider>
       </App>
     </QueryClientProvider>
