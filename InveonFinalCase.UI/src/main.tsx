@@ -23,6 +23,7 @@ import LearningContent from "./pages/user/LearningContent.tsx";
 import CreateCourse from "./pages/instructor/CreateCourse.tsx";
 import InstructorPanel from "./pages/instructor/InstructorPanel.tsx";
 import EditCourse from "./pages/instructor/EditCourse.tsx";
+import EditProfile from "./pages/user/EditProfile.tsx";
 
 const router = createBrowserRouter([
   {
@@ -104,6 +105,15 @@ const router = createBrowserRouter([
           element: (
               <RequireAuth allowedRoles={['Instructor']}>
                 <CreateCourse />
+              </RequireAuth>
+          ),
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/user/edit-profile",
+          element: (
+              <RequireAuth>
+                <EditProfile />
               </RequireAuth>
           ),
           errorElement: <ErrorPage />,

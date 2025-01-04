@@ -30,7 +30,7 @@ export function ProfileDropDown({ token }: ProfileHoverCardProps) {
                     </div>
                 </div>
                 <div className="mt-4 space-y-4 text-sm font-medium text-primary">
-                    <Link to="/learning-content" className="block hover:text-purple-600">
+                    <Link to="/home/learning-content" className="block hover:text-purple-600">
                         Learning Content
                     </Link>
                     <Link to="/cart" className="block hover:text-purple-600">
@@ -38,6 +38,9 @@ export function ProfileDropDown({ token }: ProfileHoverCardProps) {
                     </Link>
                     <Link to="/purchase-history" className="block hover:text-purple-600">
                         Purchase History
+                    </Link>
+                    <Link to="/user/edit-profile" className="block hover:text-purple-600">
+                        Edit Profile
                     </Link>
                 </div>
             </HoverCardContent>
