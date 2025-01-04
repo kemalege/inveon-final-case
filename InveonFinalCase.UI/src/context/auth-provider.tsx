@@ -10,6 +10,7 @@ type AuthState = {
 
 type DecodedToken ={
     given_name: string;
+    sub: string;
     roles?: string[];
     exp: number;
 }

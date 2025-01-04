@@ -19,6 +19,7 @@ import { Toaster } from "./components/ui/toaster.tsx";
 import CheckoutSuccess from "./pages/checkout/CheckoutSuccess.tsx";
 import PurchaseHistory from "./pages/order/PurchaseHistory.tsx";
 import NotFound from "./components/NotFound.tsx";
+import LearningContent from "./pages/user/LearningContent.tsx";
 
 const router = createBrowserRouter([
   {
@@ -74,6 +75,15 @@ const router = createBrowserRouter([
           element: (
               <RequireAuth>
                 <PurchaseHistory />
+              </RequireAuth>
+          ),
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/home/learning-content",
+          element: (
+              <RequireAuth>
+                <LearningContent />
               </RequireAuth>
           ),
           errorElement: <ErrorPage />,
