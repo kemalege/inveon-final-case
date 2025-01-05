@@ -9,6 +9,8 @@ export type Category = {
 
 interface CategoryContextType {
     categories: Category[];
+    searchTerm: string;
+    setSearchTerm: (term: string) => void;
     selectedCategory: Category | null;
     setSelectedCategory: (category: Category | null) => void;
     isLoading: boolean;
@@ -18,6 +20,7 @@ const CategoryContext = createContext<CategoryContextType | undefined>(undefined
 
 export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [searchTerm, setSearchTerm] = useState<string>("");
 
     const fetchCategories = async (): Promise<Category[]> => {
         const response = await axios.get(`/categories`);
@@ -31,7 +34,7 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return (
-        <CategoryContext.Provider value={{ categories, selectedCategory, setSelectedCategory, isLoading }}>
+        <CategoryContext.Provider value={{ categories, selectedCategory, setSelectedCategory, searchTerm, setSearchTerm, isLoading }}>
             {children}
         </CategoryContext.Provider>
     );
