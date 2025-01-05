@@ -14,7 +14,7 @@ const courseSchema = z.object({
     name: z.string().min(3, "Course name must be at least 3 characters."),
     description: z.string().min(10, "Description must be at least 10 characters."),
     price: z.coerce.number().positive("Price must be a positive number."),
-    imageUrl: z.string().url("Image URL must be a valid URL."),
+    imageUrl: z.string().url("Image URL must be a valid URL.").nullable(),
     categoryId: z.string().uuid("Please select a valid category."),
 });
 
@@ -120,7 +120,7 @@ export default function CourseForm({ courseId }: CourseFormProps) {
                 <Controller
                     name="imageUrl"
                     control={control}
-                    render={({ field }) => <Input placeholder="Image URL" {...field} />}
+                    render={({ field }) => <Input placeholder="Image URL" {...field} value={field.value ?? ""} />}
                 />
                 {errors.imageUrl && <p className="text-red-500">{errors.imageUrl.message}</p>}
 

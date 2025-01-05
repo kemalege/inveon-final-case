@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import CourseCard from "./components/CourseCard";
+import ErrorPage from "@/components/Error";
 
 interface Course {
     id: string;
@@ -21,10 +22,11 @@ export default function LearningContent() {
     const token = getDecodedToken();
     const userId = token?.sub;
 
-    const { data: courses, isLoading } = useQuery<Course[]>({
+    const { data: courses, isLoading, error, isError } = useQuery<Course[]>({
         queryKey: ["purchasedCourses", userId],
         queryFn: () => getPurchasedCourses(userId as string),
         enabled: !!userId,
+        retry: 2,
     });
 
     const getPurchasedCourses = async (userId: string) => {
@@ -32,6 +34,9 @@ export default function LearningContent() {
         const response = await axiosPrivete.get(`/courses/user/${userId}/purchased`);
         return response.data;
     };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (isError) return <ErrorPage message={(error as any).response.data.title} />;
 
     if (isLoading) {
         return (

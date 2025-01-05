@@ -18,14 +18,17 @@ export default function PurchaseHistory() {
     return response.data;
   };
 
-  const { data: orders = [], isLoading, isError } = useQuery({
+  const { data: orders = [], isLoading, isError, error } = useQuery({
     queryKey: ["userOrders", decodedToken?.sub],
     queryFn: () => getPurchaseHistory(decodedToken?.sub as string),
     enabled: !!decodedToken?.sub,
+    retry: 2,
   });
 
   if (isLoading) return <Loading />;
-  if (isError) return <ErrorPage />;
+  
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (isError) return <ErrorPage message={(error as any).response.data.title} />;
 
   return (
     <div className="max-w-6xl mx-auto p-8">

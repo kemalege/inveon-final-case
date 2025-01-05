@@ -24,7 +24,7 @@ const EditProfile = () => {
     const token = getDecodedToken();
     const userId = token?.sub;
     
-    const { control, handleSubmit, setValue, formState: { errors } } = useForm<UserProfileData>({
+    const form = useForm<UserProfileData>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
             userName: "",
@@ -33,6 +33,8 @@ const EditProfile = () => {
             phoneNumber: ""
         }
     });
+
+    const { control, handleSubmit, formState: { errors }, setValue } = form;
 
     const { isLoading } = useQuery({
         queryKey: ["userProfile", userId],
@@ -58,7 +60,8 @@ const EditProfile = () => {
                 description: "Your profile information has been successfully updated.",
             });
         },
-        onError: (error: ErrorResponse) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onError: (error: any) => {
             toast({
                 variant: "destructive",
                 title: "Update Failed",
@@ -74,10 +77,8 @@ const EditProfile = () => {
     return (
         <div className="max-w-lg mx-auto p-8 space-y-6">
             <h1 className="text-3xl font-bold">Edit Profile</h1>
-            <Form {...control}>
+            <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
-                    {/* UserName Field */}
                     <FormField
                         control={control}
                         name="userName"
@@ -91,8 +92,6 @@ const EditProfile = () => {
                             </FormItem>
                         )}
                     />
-
-                    {/* Email Field */}
                     <FormField
                         control={control}
                         name="email"
@@ -106,8 +105,6 @@ const EditProfile = () => {
                             </FormItem>
                         )}
                     />
-
-                    {/* City Field */}
                     <FormField
                         control={control}
                         name="city"
@@ -121,8 +118,6 @@ const EditProfile = () => {
                             </FormItem>
                         )}
                     />
-
-                    {/* Phone Number Field */}
                     <FormField
                         control={control}
                         name="phoneNumber"
@@ -136,8 +131,6 @@ const EditProfile = () => {
                             </FormItem>
                         )}
                     />
-
-                    {/* Submit Button */}
                     <Button type="submit" className="w-full" disabled={mutation.isPending || isLoading}>
                         {mutation.isPending ? "Updating..." : "Update Profile"}
                     </Button>
