@@ -2,6 +2,7 @@ using System.Text;
 using InveonFinalCase.API;
 using InveonFinalCase.API.Domain.Entities;
 using InveonFinalCase.API.Features.Auth;
+using InveonFinalCase.API.Features.Categories;
 using InveonFinalCase.API.Features.Courses;
 using InveonFinalCase.API.Features.Orders;
 using InveonFinalCase.API.Features.Users;
@@ -171,6 +172,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.AddAuthenticationGroupEndpoints();
+app.AddCategoryGroupEndpointExt();
 app.AddCourseGroupEndpointExt();
 app.AddOrderGroupEndpointExt();
 app.AddUserGroupEndpoints();
