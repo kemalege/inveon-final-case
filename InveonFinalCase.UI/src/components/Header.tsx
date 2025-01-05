@@ -1,15 +1,23 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ModeToggle } from "./ModeToggle";
 import { CartHeaderButton } from "./CartHeaderButton";
 import { Search } from "lucide-react";
 import { ProfileDropDown } from "./ProfileDropdown";
 
+export const categories = [
+    { id: "B52FE623-0B28-46DD-88C2-983A0C724990", name: "Software Development" },
+    { id: "A4CFE623-1B45-46DD-99C2-983A0C724221", name: "Design" },
+    { id: "C3D4E623-0B28-99DD-11C2-983A0C724322", name: "Health and Fitness" },
+    { id: "D52FE111-0B28-22DD-55C2-983A0C724933", name: "Music" }
+];
+
 export function Header() {
   const { isAuthenticated, getDecodedToken, logout } = useAuth();
-  const isAuth = isAuthenticated();
+  const navigate = useNavigate();
+  const isAuth = isAuthenticated;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const token = getDecodedToken() as any;
 
@@ -27,8 +35,8 @@ export function Header() {
               </div>
 
               <div className="flex items-center space-x-4">
-                  {!isAuth && <Button variant="ghost">Register</Button>}
-                  {token.roles.includes("Instructor") && 
+                  {!isAuth && <Button variant="ghost" onClick={() => navigate("/register") }>Register</Button>}
+                  {token && token.roles && token.roles.includes("Instructor") && 
                     <div className="text-sm text-primary">
                       <Link to="/instructor/dashboard" className="block hover:text-purple-600">
                           Instructor Dashboard
@@ -54,16 +62,17 @@ export function Header() {
               </div>
           </div>
 
-          {isAuth && (
+            {window.location.pathname === "/" && (
               <nav className="bg-primary-foreground text-secondary-foreground">
-                  <div className="container mx-auto px-4 py-2 flex items-center space-x-8 text-sm font-medium">
-                      <Link to="/" className="hover:text-primary">Software Development</Link>
-                      <Link to="/" className="hover:text-primary">Design</Link>
-                      <Link to="/" className="hover:text-primary">Health and Fitness</Link>
-                      <Link to="/" className="hover:text-primary">Music</Link>
-                  </div>
+                <div className="container mx-auto px-4 py-2 flex items-center space-x-8 text-sm font-medium">
+                {categories.map(category => (
+                  <Link key={category.id} to="/" className="hover:text-primary">
+                    {category.name}
+                  </Link>
+                ))}
+                </div>
               </nav>
-          )}
+            )}
       </header>
   );
 }

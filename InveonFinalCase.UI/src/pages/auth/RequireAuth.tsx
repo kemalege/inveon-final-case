@@ -11,11 +11,11 @@ const RequireAuth = ({ allowedRoles, children }: RequireAuthProps) => {
   const location = useLocation();
   
   const decodedToken = getDecodedToken();
-  const roles = decodedToken ? decodedToken.roles : [];
+  const roles = decodedToken ? (Array.isArray(decodedToken.roles) ? decodedToken.roles : [decodedToken.roles]) : [];
 
   const userHasRequiredRole = allowedRoles ? (roles as string[]).some((role) => allowedRoles.includes(role)) : true;
 
-  if (allowedRoles?.length === 0 && isAuthenticated()) {
+  if (allowedRoles?.length === 0 && isAuthenticated) {
       return <>{children}</>;;
   }
 
@@ -23,7 +23,7 @@ const RequireAuth = ({ allowedRoles, children }: RequireAuthProps) => {
     return <>{children}</>;
   }
 
-  if (isAuthenticated()) {
+  if (isAuthenticated) {
     return <Navigate to="/unauthorized" state={{ from: location }} replace />;
   }
 

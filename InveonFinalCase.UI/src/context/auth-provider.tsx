@@ -17,7 +17,8 @@ type DecodedToken ={
 
 export interface AuthContextType {
     auth: AuthState;
-    isAuthenticated: () => boolean;
+    isAuthenticated: boolean;
+    // isAuthenticated: () => boolean;
     getDecodedToken: () => DecodedToken | null;
     setAuth: React.Dispatch<React.SetStateAction<AuthContextType["auth"]>>;
     setUserAuth: (auth: AuthState) => void;
@@ -29,7 +30,13 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
-    const [auth, setAuth] = useState<AuthContextType["auth"]>({ user: null });
+    const [auth, setAuth] = useState<AuthState>({
+        user: null,
+        accessToken: localStorage.getItem("accessToken") || undefined,
+        refreshToken: localStorage.getItem("refreshToken") || undefined
+    });
+
+    const isAuthenticated = !!auth.accessToken;
 
     const getDecodedToken = () => {
         try {
@@ -42,11 +49,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const isAuthenticated = (): boolean => {
-        const token = localStorage.getItem("accessToken");
-        if (!token) return false;
-        return true;
-    };
+    // const isAuthenticated = (): boolean => {
+    //     const token = localStorage.getItem("accessToken");
+    //     if (!token) return false;
+    //     return true;
+    // };
 
     const setUserAuth = (auth:AuthState) => {
         setAuth(auth);
