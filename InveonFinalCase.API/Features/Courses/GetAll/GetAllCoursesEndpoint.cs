@@ -1,4 +1,5 @@
 ﻿using InveonFinalCase.API.Features.Courses.Dtos;
+using InveonFinalCase.API.Shared.Queries;
 using InveonFinalCase.API.Shared.Services;
 
 namespace InveonFinalCase.API.Features.Courses.GetAll;
@@ -12,7 +13,14 @@ public class GetCoursesWithPaginationQueryHandler(AppDbContext context, IQuerySe
     {
         var query = context.Courses.Include(c => c.Category).AsQueryable();
         
-        query = queryService.ApplyFilter(query, c => !request.QueryObject.CategoryId.HasValue || c.CategoryId == request.QueryObject.CategoryId);
+        query = queryService.ApplyFilter(query, c => 
+            !request.QueryObject.CategoryId.HasValue || c.CategoryId == request.QueryObject.CategoryId);
+        
+        if (!string.IsNullOrWhiteSpace(request.QueryObject.SearchTerm))
+        {
+            query = query.Where(c => c.Name.Contains(request.QueryObject.SearchTerm) || 
+                                     c.Description.Contains(request.QueryObject.SearchTerm));
+        }
 
         if (!query.Any())
         {
@@ -45,7 +53,12 @@ public static class GetCoursesWithPaginationEndpoint
                 (await mediator.Send(new GetCoursesWithPaginationQuery(queryObject))).ToGenericResult())
             .WithName("GetCoursesWithPagination");
 
-
         return group;
     }
+}
+
+public class CourseQueryObject : BaseQueryObject
+{
+    public Guid? CategoryId { get; set; }
+    public string? SearchTerm { get; set; }
 }
