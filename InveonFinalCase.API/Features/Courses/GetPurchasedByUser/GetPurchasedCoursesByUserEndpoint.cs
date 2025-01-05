@@ -37,6 +37,7 @@ public static class GetPurchasedCoursesEndpoint
         group.MapGet("/user/{userId:guid}/purchased",
                 async (IMediator mediator, Guid userId) =>
                     (await mediator.Send(new GetPurchasedCoursesQuery(userId))).ToGenericResult())
+            .RequireAuthorization()
             .WithName("GetPurchasedCourses");
 
         return group;

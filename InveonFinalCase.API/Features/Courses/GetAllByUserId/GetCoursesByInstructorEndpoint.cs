@@ -34,6 +34,8 @@ public static class GetCourseByUserIdEndpoint
         group.MapGet("/instructor/{userId:guid}",
                 async (IMediator mediator, Guid userId) =>
                     (await mediator.Send(new GetCourseByUserIdQuery(userId))).ToGenericResult())
+            .RequireAuthorization()
+            .RequireAuthorization("InstructorRole")
             .WithName("GetByUserIdCourses");
 
         return group;

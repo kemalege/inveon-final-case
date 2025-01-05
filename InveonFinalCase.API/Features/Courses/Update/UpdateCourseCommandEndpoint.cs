@@ -10,7 +10,9 @@ public static class UpdateCourseCommandEndpoint
                 async (UpdateCourseCommand command, IMediator mediator) =>
                     (await mediator.Send(command)).ToGenericResult())
             .WithName("UpdateCourse")
-            .AddEndpointFilter<ValidationFilter<UpdateCourseCommand>>();
+            .AddEndpointFilter<ValidationFilter<UpdateCourseCommand>>()
+            .RequireAuthorization()
+            .RequireAuthorization("InstructorRole");
 
         return group;
     }

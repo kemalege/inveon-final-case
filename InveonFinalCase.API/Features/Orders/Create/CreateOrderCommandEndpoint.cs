@@ -10,6 +10,7 @@ public static class CreateOrderCommandEndpoint
         group.MapPost("/",
                 async (CreateOrderCommand command, IMediator mediator) =>
                     (await mediator.Send(command)).ToGenericResult())
+            .RequireAuthorization()
             .WithName("CreateOrder")
             .Produces<Guid>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status404NotFound)

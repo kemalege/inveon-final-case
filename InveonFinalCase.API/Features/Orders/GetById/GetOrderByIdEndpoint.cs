@@ -37,6 +37,7 @@ public static class GetOrderByIdEndpoint
         group.MapGet("/{orderId:guid}",
                 async (IMediator mediator, Guid orderId) =>
                     (await mediator.Send(new GetOrderByIdQuery(orderId))).ToGenericResult())
+            .RequireAuthorization()
             .WithName("GetOrderById");
 
         return group;

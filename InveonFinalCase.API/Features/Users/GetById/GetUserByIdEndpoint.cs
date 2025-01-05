@@ -33,6 +33,7 @@ public static class GetUserByIdEndpoint
         group.MapGet("/{userId}",
                 async (IMediator mediator, string userId) =>
                     (await mediator.Send(new GetUserByIdQuery(userId))).ToGenericResult())
+            .RequireAuthorization()
             .WithName("GetUserById");
 
         return group;

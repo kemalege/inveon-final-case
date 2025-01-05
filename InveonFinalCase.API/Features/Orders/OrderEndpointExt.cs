@@ -9,8 +9,8 @@ public static class OrderEndpointExt
     public static void AddOrderGroupEndpointExt(this WebApplication app)
     {
         app.MapGroup("api/v1/orders").WithTags("Orders")
-            .CreateOrderGroupItemEndpoint().RequireAuthorization()
-            .GetByUserIdOrdersGroupItemEndpoint().RequireAuthorization()
-            .GetByIdOrderGroupItemEndpoint().RequireAuthorization();
+            .CreateOrderGroupItemEndpoint()
+            .GetByUserIdOrdersGroupItemEndpoint()
+            .GetByIdOrderGroupItemEndpoint();
     }
 }
