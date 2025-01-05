@@ -13,14 +13,15 @@ const PAGE_SIZE = 4;
 const CourseList = () => {
     const [page, setPage] = useState(1);
 
-    const { categories, selectedCategory, setSelectedCategory} = useCategory();
+    const { categories, searchTerm, selectedCategory, setSelectedCategory} = useCategory();
 
-    const fetchCourses = async (page: number, pageSize: number, categoryId?: string) => {
+    const fetchCourses = async (page: number, pageSize: number, categoryId?: string, searchTerm?: string) => {
         const response = await axios.get(`/courses`, {
             params: {
                 page,
                 pageSize,
-                categoryId
+                categoryId,
+                searchTerm
             }
         });
         return response.data;
@@ -32,13 +33,14 @@ const CourseList = () => {
     };
 
     const { data, isLoading, error, isError, refetch } = useQuery({
-        queryKey: ["courses", page, PAGE_SIZE, selectedCategory],
-        queryFn: () => fetchCourses(page, PAGE_SIZE, selectedCategory?.id),
+        queryKey: ["courses", page, PAGE_SIZE, selectedCategory, searchTerm],
+        queryFn: () => fetchCourses(page, PAGE_SIZE, selectedCategory?.id, searchTerm),
         retry: 1
     });
 
     if (isLoading) return <Loading />;
-    if (isError) return <ErrorPage message={error.message} onRetry={refetch} />;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (isError) return <ErrorPage message={(error as any).response.data.title} onRetry={refetch} />;
 
     return (
         <div className="p-8 space-y-4 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
