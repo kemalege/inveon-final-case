@@ -31,8 +31,4 @@
       </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Features\Auth\Register\" />
-    </ItemGroup>
-
 </Project>

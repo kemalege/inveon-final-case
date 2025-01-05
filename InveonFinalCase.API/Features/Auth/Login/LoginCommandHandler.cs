@@ -26,14 +26,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, ServiceResult<L
     public async Task<ServiceResult<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
-
-        // var user = new AppUser
-        // {
-        //     UserName = "ege",
-        //     Email = "ege@example.com",
-        //     PasswordHash = _userManager.PasswordHasher.HashPassword(null, "test1234")
-        // };
-        // await _userManager.CreateAsync(user);
         
         if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
         {

@@ -34,7 +34,6 @@ public class CreateCourseCommandHandler(AppDbContext context, IMapper mapper, IH
         newCourse.Id = Guid.NewGuid();
         newCourse.Instructor = instructor;
         newCourse.UserId = userId;
-        // newCourse.Instructor = instructor;
 
         context.Courses.Add(newCourse);
         await context.SaveChangesAsync(cancellationToken);
