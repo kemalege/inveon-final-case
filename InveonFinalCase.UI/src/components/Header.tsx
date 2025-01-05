@@ -1,12 +1,11 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
 import { Link, useNavigate } from "react-router";
 import { ModeToggle } from "./ModeToggle";
 import { CartHeaderButton } from "./CartHeaderButton";
-import { Search } from "lucide-react";
 import { ProfileDropDown } from "./ProfileDropdown";
 import HeaderCategoryFilter from "./HeaderCategoryFilter";
+import SearchInput from "./SearchInput";
 
 export function Header() {
   const { isAuthenticated, getDecodedToken, logout } = useAuth();
@@ -22,10 +21,7 @@ export function Header() {
                   <Link to="/" className="text-primary text-xl font-bold">
                       <span className="text-purple-600">Invony</span>
                   </Link>
-                  <div className="relative flex-1">
-                      <Input type="text" placeholder="Search for anything" className="pl-10" />
-                      <Search className="absolute left-3 top-2.5 w-5 h-5 text-muted-foreground" />
-                  </div>
+                  <SearchInput />
               </div>
 
               <div className="flex items-center space-x-4">
