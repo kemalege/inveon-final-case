@@ -1,8 +1,7 @@
 import { HoverCard, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router";
 import { AddToCartHoverCard } from "./AddToCartHoverCard";
-import { useCart } from "@/pages/cart/context/CartContext";
-import { Button } from "@/components/ui/button";
+import AddToCartButton from "@/components/AddToCartButton";
 
 export interface CourseItemProps {
     id: string;
@@ -20,26 +19,8 @@ export interface CourseItemProps {
 export function CourseItem(course: CourseItemProps) {
 
     const navigate = useNavigate();
-    const { addToCart, isInCart} = useCart();
 
     const { id, name, instructor, description, price, imageUrl, category } = course;
-
-    const addItemToCart = () => {
-        addToCart(course);
-    }
-
-    const buttonContext = isInCart(id) ? (
-        <Button
-          className="w-full bg-purple-600 text-white"
-          onClick={() => navigate("/cart")}
-        >
-          Go To Cart
-        </Button>
-      ) : (
-        <Button className="w-full bg-purple-600 text-white" onClick={addItemToCart}>
-          Add to Cart
-        </Button>
-      );
 
     return (
         <HoverCard>
@@ -64,7 +45,7 @@ export function CourseItem(course: CourseItemProps) {
                 </HoverCardTrigger>
             </div>
             <AddToCartHoverCard summary={description}>
-                {buttonContext}
+                <AddToCartButton course={course}/>
             </AddToCartHoverCard>
         </HoverCard>
     );
