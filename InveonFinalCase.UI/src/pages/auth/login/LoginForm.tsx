@@ -15,17 +15,11 @@ import { AlertCircle, Loader2 } from "lucide-react"
 import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import useAuth from "@/hooks/useAuth";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DecodedToken, loginUser } from "./api";
-
-type ErrorResponse = {
-  type: string;
-  title: string;
-  status: number;
-  detail: string;
-};
+import { ErrorResponse } from "@/types/type";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -80,7 +74,7 @@ export function LoginForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-      {serverError && (
+        {serverError && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>{serverError.title}</AlertTitle>
@@ -117,6 +111,14 @@ export function LoginForm() {
           {mutation.isPending ? <Loader2 className="animate-spin" />
           : "Login"}
         </Button>
+        <div className="text-center mt-4">
+          <p className="text-sm text-muted-foreground">
+            Don't have an account?{" "}
+            <Link to="/register" className="text-primary underline">
+              Register
+            </Link>
+          </p>
+        </div>
       </form>
     </Form>
   );

@@ -24,6 +24,7 @@ import CreateCourse from "./pages/instructor/CreateCourse.tsx";
 import InstructorPanel from "./pages/instructor/InstructorPanel.tsx";
 import EditCourse from "./pages/instructor/EditCourse.tsx";
 import EditProfile from "./pages/user/EditProfile.tsx";
+import { RegisterPage } from "./pages/auth/register/Register.tsx";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,16 @@ const router = createBrowserRouter([
         {
           path: "/unauthorized",
           element: <Unauthorized />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/login",
+          element: <LoginPage />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/register",
+          element: <RegisterPage />,
           errorElement: <ErrorPage />,
         },
         {
