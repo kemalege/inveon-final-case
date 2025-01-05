@@ -25,6 +25,7 @@ import InstructorPanel from "./pages/instructor/InstructorPanel.tsx";
 import EditCourse from "./pages/instructor/EditCourse.tsx";
 import EditProfile from "./pages/user/EditProfile.tsx";
 import { RegisterPage } from "./pages/auth/register/Register.tsx";
+import { CategoryProvider } from "./context/category-provider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -145,7 +146,9 @@ createRoot(document.getElementById("root")!).render(
       <App>
         <AuthProvider>
           <CartProvider>
-            <RouterProvider router={router} />
+            <CategoryProvider>
+              <RouterProvider router={router} />
+            </CategoryProvider>
             <Toaster />
           </CartProvider>
         </AuthProvider>

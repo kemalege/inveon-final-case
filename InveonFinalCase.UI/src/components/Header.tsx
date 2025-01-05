@@ -6,13 +6,7 @@ import { ModeToggle } from "./ModeToggle";
 import { CartHeaderButton } from "./CartHeaderButton";
 import { Search } from "lucide-react";
 import { ProfileDropDown } from "./ProfileDropdown";
-
-export const categories = [
-    { id: "B52FE623-0B28-46DD-88C2-983A0C724990", name: "Software Development" },
-    { id: "A4CFE623-1B45-46DD-99C2-983A0C724221", name: "Design" },
-    { id: "C3D4E623-0B28-99DD-11C2-983A0C724322", name: "Health and Fitness" },
-    { id: "D52FE111-0B28-22DD-55C2-983A0C724933", name: "Music" }
-];
+import HeaderCategoryFilter from "./HeaderCategoryFilter";
 
 export function Header() {
   const { isAuthenticated, getDecodedToken, logout } = useAuth();
@@ -61,18 +55,7 @@ export function Header() {
                   <ModeToggle />
               </div>
           </div>
-
-            {window.location.pathname === "/" && (
-              <nav className="bg-primary-foreground text-secondary-foreground">
-                <div className="container mx-auto px-4 py-2 flex items-center space-x-8 text-sm font-medium">
-                {categories.map(category => (
-                  <Link key={category.id} to="/" className="hover:text-primary">
-                    {category.name}
-                  </Link>
-                ))}
-                </div>
-              </nav>
-            )}
+            <HeaderCategoryFilter />
       </header>
   );
 }
