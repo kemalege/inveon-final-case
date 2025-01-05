@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import useAuth from "@/hooks/useAuth";
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from "react";
 
 export interface CourseItem {
     id: string;
@@ -20,21 +21,33 @@ interface CartContextType {
     clearCart: () => void;
     totalAmount: number;
     isInCart: (courseId: string) => boolean;
+    setPendingItem: React.Dispatch<React.SetStateAction<CourseItem | null>>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [cart, setCart] = useState<CourseItem[]>([]);
 
-    const addToCart = (course: CourseItem) => {
+    const { isAuthenticated } = useAuth();
+
+    const [cart, setCart] = useState<CourseItem[]>([]);
+    const [pendingItem, setPendingItem] = useState<CourseItem | null>(null);
+
+    const addToCart = useCallback((course: CourseItem) => {
         const alreadyInCart = cart.find((item) => item.id === course.id);
         if (alreadyInCart) {
             alert(`${course.name} is already in your cart!`);
             return;
         }
         setCart((prev) => [...prev, course]);
-    };
+    }, [cart]);
+
+    useEffect(() => {
+        if(isAuthenticated && pendingItem){
+            addToCart(pendingItem);
+            setPendingItem(null);
+        }
+    }, [isAuthenticated, pendingItem, addToCart]);
 
     const removeFromCart = (id: string) => {
         setCart((prev) => prev.filter((item) => item.id !== id));
@@ -48,8 +61,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     const totalAmount = cart.reduce((acc, item) => acc + item.price, 0);
 
+    const contextValue = {
+        cart,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        totalAmount,
+        isInCart,
+        setPendingItem
+    };
+
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, totalAmount, isInCart }}>
+        <CartContext.Provider value={{ ...contextValue }}>
             {children}
         </CartContext.Provider>
     );

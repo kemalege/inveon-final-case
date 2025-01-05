@@ -1,14 +1,22 @@
 import { Button } from './ui/button';
 import { useNavigate } from 'react-router';
 import { CourseItem, useCart } from '@/pages/cart/context/CartContext';
+import useAuth from '@/hooks/useAuth';
 
 const AddToCartButton = ({course}: {course: CourseItem}) => {
 
     const navigate = useNavigate();
-    const { addToCart, isInCart} = useCart();
+    const { isAuthenticated } = useAuth();
+    const { addToCart, isInCart, setPendingItem} = useCart();
+    
 
     const addItemToCart = () => {
-        addToCart(course);
+        if(isAuthenticated) {
+            addToCart(course);
+        } else{
+            setPendingItem(course);
+            navigate("/login");
+        }
     }
 
     const buttonContext = isInCart(course.id) ? (
