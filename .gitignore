@@ -28,3 +28,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+*.DotSettings.user
+
+*.vite/deps/_metadata.json
+*.vite/deps/package.json
+*.vite/
+*.vite/deps/
